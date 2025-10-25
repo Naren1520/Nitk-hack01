@@ -1,0 +1,44 @@
+{
+  "name": "Campus Link - College Management System",
+  "short_name": "Campus Link",
+  "description": "Comprehensive college hub for students, faculty, and administrators",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#030213",
+  "orientation": "portrait-primary",
+  "categories": ["education", "productivity", "social"],
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "Campus Link Dashboard"
+    },
+    {
+      "src": "/screenshot-narrow.png", 
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Campus Link Mobile"
+    }
+  ],
+  "features": [
+    "academic-management",
+    "real-time-collaboration", 
+    "ai-powered-tools",
+    "campus-services",
+    "communication-hub"
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
+}

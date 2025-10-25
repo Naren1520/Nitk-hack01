@@ -1,0 +1,59 @@
+# A string used to distinguish different Supabase projects on the same host.
+project_id = "campus-link-project"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public", "graphql_public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 1000
+
+[auth]
+enabled = true
+port = 54322
+site_url = "http://localhost:3000"
+additional_redirect_urls = ["https://campus-link.vercel.app"]
+jwt_expiry = 3600
+refresh_token_rotation_enabled = true
+refresh_token_reuse_interval = 10
+enable_signup = true
+
+[auth.email]
+enable_signup = true
+double_confirm_changes = true
+enable_confirmations = false
+
+[db]
+port = 54323
+major_version = 15
+
+[studio]
+enabled = true
+port = 54324
+
+[inbucket]
+enabled = true
+port = 54325
+smtp_port = 54326
+pop3_port = 54327
+
+[storage]
+enabled = true
+port = 54328
+file_size_limit = "50MB"
+buckets = [
+  { name = "avatars", public = true },
+  { name = "documents", public = false },
+  { name = "content-files", public = true },
+  { name = "exam-files", public = false }
+]
+
+[functions]
+enabled = true
+port = 54329
+
+[analytics]
+enabled = true
+port = 54330
+vector_port = 54331
+# Setup analytics to track user behavior

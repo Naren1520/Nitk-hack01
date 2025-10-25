@@ -1,0 +1,16 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://campus-link.vercel.app/sitemap.xml
+
+# Security - block sensitive paths
+Disallow: /api/
+Disallow: /.env
+Disallow: /admin/
+Disallow: /private/
+
+# SEO optimization
+Allow: /assets/
+Allow: /favicon.svg
+Allow: /manifest.json

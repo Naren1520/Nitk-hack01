@@ -1,0 +1,89 @@
+{
+  "name": "campus-link",
+  "version": "1.0.0",
+  "description": "Comprehensive college management system and campus hub",
+  "main": "App.tsx",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "type-check": "tsc --noEmit",
+    "deploy": "chmod +x deploy.sh && ./deploy.sh",
+    "deploy:vercel": "npm run build && npx vercel --prod",
+    "deploy:netlify": "npm run build && npx netlify deploy --prod --dir=dist",
+    "build:production": "NODE_ENV=production npm run build",
+    "preview:production": "vite preview --host",
+    "analyze": "npx vite-bundle-analyzer dist/assets/*.js",
+    "verify": "node verify-deployment.js",
+    "setup": "npm install && npm run build && npm run verify"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "@supabase/supabase-js": "^2.38.0",
+    "lucide-react": "^0.294.0",
+    "recharts": "^2.8.0",
+    "sonner": "^1.2.4",
+    "react-hook-form": "^7.55.0",
+    "motion": "^10.16.0",
+    "zod": "^3.22.4",
+    "@hookform/resolvers": "^3.3.2",
+    "date-fns": "^2.30.0",
+    "react-day-picker": "^8.9.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.37",
+    "@types/react-dom": "^18.2.15",
+    "@typescript-eslint/eslint-plugin": "^6.10.0",
+    "@typescript-eslint/parser": "^6.10.0",
+    "@vitejs/plugin-react": "^4.1.0",
+    "autoprefixer": "^10.4.16",
+    "eslint": "^8.53.0",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-react-refresh": "^0.4.4",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.5",
+    "typescript": "^5.2.2",
+    "vite": "^4.5.0",
+    "vite-bundle-analyzer": "^0.7.0"
+  },
+  "keywords": [
+    "college-management",
+    "campus-hub",
+    "education-platform",
+    "student-portal",
+    "react",
+    "typescript",
+    "supabase",
+    "college",
+    "university",
+    "academic-management",
+    "real-time-collaboration",
+    "ai-powered",
+    "smart-campus"
+  ],
+  "author": "Campus Link Development Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/campus-link.git"
+  },
+  "homepage": "https://campus-link.vercel.app",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
