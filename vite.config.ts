@@ -53,7 +53,10 @@
     },
     build: {
       target: 'esnext',
-      outDir: 'build',
+      // Netlify expects the publish directory to be `dist` by default.
+      // Set Vite's output directory to `dist` so CI/deploy platforms that expect
+      // `dist` will find the built site without changing their config.
+      outDir: 'dist',
     },
     server: {
       port: 3000,
