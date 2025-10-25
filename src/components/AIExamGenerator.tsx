@@ -24,7 +24,25 @@ import { Progress } from './ui/progress';
 import { ScrollArea } from './ui/scroll-area';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from './ui/dialog';
 import { RadioGroup, RadioGroupItem } from './ui/radio-group';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
+// OCR / document parsing
+import Tesseract from 'tesseract.js';
+import * as pdfjsLib from 'pdfjs-dist';
+// Configure pdfjs worker to use CDN (avoids bundler resolution issues)
+try {
+  // @ts-ignore
+  if (pdfjsLib && pdfjsLib.GlobalWorkerOptions) {
+    // Use a generic unpkg CDN for the worker — adjust version if necessary
+    // This prevents Vite from trying to resolve the legacy worker path at build time.
+    // If you prefer, replace the URL with a pinned version matching your pdfjs-dist package.
+    // Example pin: https://unpkg.com/pdfjs-dist@3.5.141/build/pdf.worker.min.js
+    // We'll use a flexible URL which works in most environments.
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://unpkg.com/pdfjs-dist@latest/build/pdf.worker.min.js';
+  }
+} catch (e) {
+  // ignore worker configuration failures
+}
+import mammoth from 'mammoth';
 import { useAuth } from '../lib/contexts/AuthContext';
 import { projectId, publicAnonKey } from '../utils/supabase/info';
 import { aiService } from '../lib/services/aiService';
@@ -109,55 +127,103 @@ export default function AIExamGenerator() {
     return ['admin', 'lecturer'].includes(profile.role);
   };
 
-  // Handle file upload
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files || []);
+  // Handle file upload — accepts TXT, PDF, DOC/DOCX and images (OCR)
+  const handleFileUpload = (event: any) => {
+    const files = Array.from(event.target.files || []) as File[];
     if (files.length === 0) return;
 
-    const validFiles = files.filter(file => {
-      const validTypes = ['text/plain', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-      return validTypes.includes(file.type) || file.name.endsWith('.txt') || file.name.endsWith('.pdf');
-    });
+    // Accept more types: text, pdf, docx, doc, images
+    const accepted = files.filter((f: File) => {
+      const name = f.name.toLowerCase();
+      return (
+        (f.type && f.type.startsWith('text')) ||
+        f.type === 'application/pdf' ||
+        name.endsWith('.pdf') ||
+        name.endsWith('.docx') ||
+        name.endsWith('.doc') ||
+        (f.type && f.type.startsWith('image/'))
+      );
+    }) as File[];
 
-    if (validFiles.length !== files.length) {
-      toast.error('Some files were skipped. Please upload only TXT, PDF, or DOC files.');
+    if (accepted.length !== files.length) {
+      toast.error('Some files were skipped. Please upload TXT, PDF, DOC/DOCX or image files.');
     }
 
-    setUploadedFiles(prev => [...prev, ...validFiles]);
+    setUploadedFiles(prev => [...prev, ...accepted]);
 
-    // Read text content from files
-    validFiles.forEach(file => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target?.result as string;
-        // Extract meaningful content (remove excessive whitespace, etc.)
-        const cleanContent = content
-          .replace(/\s+/g, ' ')
-          .replace(/[^\w\s.,!?;:]/g, '')
-          .trim();
-        
-        if (cleanContent.length > 0) {
-          setSyllabusContent(prev => 
-            prev + `\n\n--- Content from ${file.name} ---\n${cleanContent.slice(0, 2000)}${cleanContent.length > 2000 ? '...' : ''}`
-          );
+    // Extract text for each accepted file and append to syllabusContent
+    (async () => {
+  for (const file of accepted as File[]) {
+        try {
+          const extracted = await extractTextFromFile(file as File);
+          if (extracted && extracted.trim().length > 0) {
+            setSyllabusContent(prev => prev + `\n\n--- Content from ${file.name} ---\n${extracted}\n`);
+          } else {
+            setSyllabusContent(prev => prev + `\n\n--- File: ${file.name} ---\nNo extractable text found; AI will analyze the file as best as possible.\n`);
+          }
+        } catch (err) {
+          console.error('Extraction error for', file.name, err);
+          setSyllabusContent(prev => prev + `\n\n--- File: ${file.name} ---\nFailed to extract content.\n`);
         }
-      };
-      reader.onerror = () => {
-        toast.error(`Failed to read ${file.name}`);
-      };
-      
-      // Handle different file types
-      if (file.type === 'text/plain' || file.name.endsWith('.txt')) {
-        reader.readAsText(file);
-      } else {
-        // For other file types, show a placeholder
-        setSyllabusContent(prev => 
-          prev + `\n\n--- File: ${file.name} ---\nFile uploaded successfully. AI will analyze this ${file.type || 'document'} to generate relevant questions.`
-        );
       }
-    });
 
-    toast.success(`${validFiles.length} file(s) uploaded successfully!`);
+      toast.success(`${accepted.length} file(s) uploaded and processed`);
+    })();
+  };
+
+  // Helper: extract text from file (image OCR, PDF, DOCX, TXT)
+  const extractTextFromFile = async (file: File): Promise<string> => {
+    const name = file.name.toLowerCase();
+
+    // Images: OCR with Tesseract
+    if (file.type.startsWith('image/')) {
+      try {
+        const { data } = await Tesseract.recognize(file, 'eng', { logger: () => {} });
+        return data?.text?.trim() || '';
+      } catch (err) {
+        console.error('Tesseract error', err);
+        return '';
+      }
+    }
+
+    // PDF
+    if (file.type === 'application/pdf' || name.endsWith('.pdf')) {
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        let fullText = '';
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const content = await page.getTextContent();
+          const pageText = content.items.map((it: any) => (it.str ? it.str : '')).join(' ');
+          fullText += `\n\n${pageText}`;
+        }
+        return fullText.trim();
+      } catch (err) {
+        console.error('PDF extraction error', err);
+        return '';
+      }
+    }
+
+    // DOCX (mammoth)
+    if (name.endsWith('.docx') || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+      try {
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        return (result?.value || '').trim();
+      } catch (err) {
+        console.error('DOCX extraction error', err);
+        return '';
+      }
+    }
+
+    // Plain text or fallback: read as text
+    try {
+      return await file.text();
+    } catch (err) {
+      console.error('File read error', err);
+      return '';
+    }
   };
 
   // Remove uploaded file
@@ -546,7 +612,7 @@ export default function AIExamGenerator() {
                     type="file"
                     ref={fileInputRef}
                     onChange={handleFileUpload}
-                    accept=".txt,.pdf,.doc,.docx"
+                    accept=".txt,.pdf,.doc,.docx,image/*"
                     multiple
                     className="hidden"
                   />
