@@ -1,3 +1,7 @@
+
+
+
+
 import { useState, useRef, useEffect } from 'react';
 import { 
   Brain, 
@@ -608,12 +612,16 @@ export default function AIExamGenerator() {
               <div>
                 <Label>Upload Study Materials</Label>
                 <div className="mt-2">
+                  <Label className="sr-only" htmlFor="syllabus-files">Upload study materials</Label>
                   <input
+                    id="syllabus-files"
                     type="file"
                     ref={fileInputRef}
                     onChange={handleFileUpload}
                     accept=".txt,.pdf,.doc,.docx,image/*"
                     multiple
+                    title="Upload study materials (TXT, PDF, DOC/DOCX, images)"
+                    placeholder="Select files to upload"
                     className="hidden"
                   />
                   <Button

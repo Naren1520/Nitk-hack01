@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '../ui/dialog';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -234,7 +234,7 @@ export default function LoginModal({ open, onOpenChange }: LoginModalProps) {
                       <Label htmlFor="signup-firstName">First Name</Label>
                       <Input
                         id="signup-firstName"
-                        placeholder="John"
+                        placeholder="Naren S J"
                         value={signupForm.firstName}
                         onChange={(e) => setSignupForm({ ...signupForm, firstName: e.target.value })}
                         required

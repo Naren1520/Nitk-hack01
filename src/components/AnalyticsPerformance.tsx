@@ -22,7 +22,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import { useAuth } from '../lib/contexts/AuthContext';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 interface PerformanceData {
   id: string;
@@ -77,7 +77,7 @@ export default function AnalyticsPerformance() {
         {
           id: '1',
           studentId: user?.id || 'student1',
-          studentName: 'John Doe',
+          studentName: 'Naren S J',
           subject: 'Computer Science',
           examScore: 85,
           maxScore: 100,
@@ -89,7 +89,7 @@ export default function AnalyticsPerformance() {
         {
           id: '2',
           studentId: user?.id || 'student1',
-          studentName: 'John Doe',
+          studentName: 'Naren S J',
           subject: 'Mathematics',
           examScore: 92,
           maxScore: 100,
@@ -162,10 +162,11 @@ export default function AnalyticsPerformance() {
       return acc;
     }, {} as Record<string, number>);
 
-    return Object.entries(difficulty).map(([level, count]) => ({
+    const entries = Object.entries(difficulty) as [string, number][];
+    return entries.map(([level, count]) => ({
       difficulty: level.charAt(0).toUpperCase() + level.slice(1),
       count,
-      percentage: (count / performanceData.length) * 100
+      percentage: performanceData.length > 0 ? (count / performanceData.length) * 100 : 0
     }));
   };
 
