@@ -93,10 +93,10 @@ export default function ExamScheduling() {
   ];
 
   const students = [
-    { id: 'student1', name: 'John Doe', email: 'john@university.edu' },
-    { id: 'student2', name: 'Jane Smith', email: 'jane@university.edu' },
-    { id: 'student3', name: 'Mike Johnson', email: 'mike@university.edu' },
-    { id: 'student4', name: 'Sarah Wilson', email: 'sarah@university.edu' }
+    { id: 'student1', name: 'Naren S J', email: 'narensonu1520@gmail.com' },
+    { id: 'student2', name: 'Tharun', email: 'tharun@university.edu' },
+    { id: 'student3', name: 'Mitchel starck', email: 'starck@university.edu' },
+    { id: 'student4', name: 'Smith', email: 'smith@university.edu' }
   ];
 
   // Check if user can schedule exams (admin/lecturer)
@@ -177,7 +177,7 @@ export default function ExamScheduling() {
           id: 'assign1',
           examId: 'schedule1',
           studentId: 'student1',
-          studentName: 'John Doe',
+          studentName: 'Naren S J',
           assignedAt: '2024-01-20T08:00:00Z',
           status: 'assigned'
         },

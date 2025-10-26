@@ -1,7 +1,36 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, AuthState, LoginCredentials, SignupData } from '../types/database';
+// If these types are not exported from '../types/database', define them here or import the correct ones:
+
+// Example definitions (replace with actual definitions as needed)
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  // Add other user fields as needed
+}
+
+export interface AuthState {
+  user: User | null;
+  loading: boolean;
+  error: string | null;
+}
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface SignupData {
+  name: string;
+  email: string;
+  password: string;
+  // Add other signup fields as needed
+}
+
+// Remove the broken import
+// import { User, AuthState, LoginCredentials, SignupData } from '../types/database';
 import { authApi } from '../services/mockApi';
-import { toast } from 'sonner@2.0.3';
+import { toast } from 'sonner';
 
 interface AuthContextType extends AuthState {
   login: (credentials: LoginCredentials) => Promise<boolean>;

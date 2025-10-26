@@ -4,8 +4,10 @@ import { Badge } from './ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import { Input } from './ui/input';
 import { Switch } from './ui/switch';
-import { Brain, MapPin, Focus, MessageCircle, Navigation, Clock, Zap, Phone } from 'lucide-react';
+import { Brain, MapPin, Focus, MessageCircle, Navigation, Clock, Zap, Phone, Video, Bot, Calendar, Users, FileSpreadsheet, UserCheck, BookOpen, FileText } from 'lucide-react';
 import AIStudyAssistant from './AIStudyAssistant';
+import StudyPlanGenerator from './StudyPlanGenerator';
+import AIInterviewPractice from './AIInterviewPractice';
 
 export default function SmartCampusSection() {
   return (
@@ -16,16 +18,25 @@ export default function SmartCampusSection() {
       </div>
 
       <Tabs defaultValue="ai-assistant" className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="ai-assistant">AI Assistant</TabsTrigger>
-          <TabsTrigger value="ar-navigation">AR Navigation</TabsTrigger>
+          <TabsTrigger value="study-plan">Study Plan</TabsTrigger>
+          <TabsTrigger value="ar-navigation">AR Nav</TabsTrigger>
           <TabsTrigger value="study-mode">Study Mode</TabsTrigger>
+          <TabsTrigger value="interviews">Interviews</TabsTrigger>
         </TabsList>
 
         {/* AI Assistant */}
         <TabsContent value="ai-assistant" className="space-y-6">
           <AIStudyAssistant />
         </TabsContent>
+
+        {/* Study Plan Generator */}
+        <TabsContent value="study-plan" className="space-y-6">
+          <StudyPlanGenerator />
+        </TabsContent>
+
+        {/* (AI Exam removed) */}
 
         {/* AR Navigation */}
         <TabsContent value="ar-navigation" className="space-y-6">
@@ -248,6 +259,11 @@ export default function SmartCampusSection() {
               </div>
             </CardContent>
           </Card>
+        </TabsContent>
+
+        {/* Interviews */}
+        <TabsContent value="interviews" className="space-y-6">
+          <AIInterviewPractice />
         </TabsContent>
       </Tabs>
     </div>

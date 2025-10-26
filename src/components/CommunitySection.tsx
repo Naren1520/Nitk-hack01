@@ -10,7 +10,7 @@ import { Trophy, Search, MapPin, Calendar, Star, Award, Target, Users } from 'lu
 export default function CommunitySection() {
   const achievements = [
     {
-      name: 'Sarah Chen',
+      name: 'Nishmitha',
       achievement: 'First Place in National Coding Championship',
       category: 'Academic',
       date: '2024-03-05',
@@ -19,7 +19,7 @@ export default function CommunitySection() {
       image: 'SC'
     },
     {
-      name: 'Michael Rodriguez',
+      name: 'Michael Starck',
       achievement: 'Published Research Paper in IEEE Journal',
       category: 'Research',
       date: '2024-02-28',
@@ -28,7 +28,7 @@ export default function CommunitySection() {
       image: 'MR'
     },
     {
-      name: 'Priya Patel',
+      name: 'Smriti Mandanna',
       achievement: 'Student of the Year Award 2024',
       category: 'Overall Excellence',
       date: '2024-02-15',
@@ -46,7 +46,7 @@ export default function CommunitySection() {
       description: 'Lost near the library on March 8th. Has a blue protective case with a crack on the corner.',
       location: 'Central Library',
       date: '2024-03-08',
-      contact: 'john.doe@college.edu',
+      contact: 'travis.head@college.edu',
       status: 'active'
     },
     {
@@ -358,8 +358,8 @@ export default function CommunitySection() {
                           <Input placeholder="e.g., iPhone, Backpack, Keys" />
                         </div>
                         <div>
-                          <label className="text-sm font-medium block mb-2">Location</label>
-                          <select className="w-full p-2 border rounded-lg text-sm">
+                          <label htmlFor="location-select" className="text-sm font-medium block mb-2">Location</label>
+                          <select id="location-select" aria-label="Location" title="Location" className="w-full p-2 border rounded-lg text-sm">
                             <option>Select Location</option>
                             <option>Central Library</option>
                             <option>Computer Lab A</option>
